@@ -8,25 +8,27 @@ import locale
 import gettext
 import glob
 
-VERSION = '@VERSION@'
-pkgdatadir = '@pkgdatadir@'
-localedir = '@localedir@'
+VERSION = "@VERSION@"
+pkgdatadir = "@pkgdatadir@"
+localedir = "@localedir@"
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('forge', localedir)
-locale.textdomain('forge')
-gettext.install('forge', localedir)
+locale.bindtextdomain("forge", localedir)
+locale.textdomain("forge")
+gettext.install("forge", localedir)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'Forge.gresource'))
+
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, "Forge.gresource"))
     resource._register()
 
-    ui_resource = Gio.Resource.load(os.path.join(pkgdatadir, 'Forge.UI.gresource'))
+    ui_resource = Gio.Resource.load(os.path.join(pkgdatadir, "Forge.UI.gresource"))
     ui_resource._register()
 
     from forge import main
+
     sys.exit(main.main(VERSION))
