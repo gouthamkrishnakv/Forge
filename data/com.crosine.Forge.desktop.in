@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=forge
+Exec=forge
+Icon=com.crosine.Forge
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

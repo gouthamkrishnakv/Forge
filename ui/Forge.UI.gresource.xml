@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<gresources>
+  <gresource prefix="/com/crosine/Forge/UI">
+    <file preprocess="xml-stripblanks">main_window.ui</file>
+  </gresource>
+</gresources>

@@ -1,0 +1,4 @@
+data/com.crosine.Forge.desktop.in
+data/com.crosine.Forge.appdata.xml.in
+data/com.crosine.Forge.gschema.xml
+src/main.py
