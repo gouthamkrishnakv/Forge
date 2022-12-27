@@ -123,6 +123,25 @@ testing = ["pytest-benchmark", "pytest"]
 dev = ["tox", "pre-commit"]
 
 [[package]]
+name = "pycairo"
+version = "1.23.0"
+description = "Python interface for cairo"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
+name = "pygobject"
+version = "3.42.2"
+description = "Python bindings for GObject Introspection"
+category = "dev"
+optional = false
+python-versions = ">=3.6, <4"
+
+[package.dependencies]
+pycairo = ">=1.16,<2.0"
+
+[[package]]
 name = "pytest"
 version = "7.2.0"
 description = "pytest: simple powerful testing with Python"
@@ -143,6 +162,17 @@ tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
+name = "req2flatpak"
+version = "0.1.0"
+description = "Generates a flatpak-builder build module for installing python packages defined in requirements.txt files."
+category = "dev"
+optional = false
+python-versions = ">=3.7.2,<4.0.0"
+
+[package.extras]
+packaging = ["packaging (>=21.3,<22.0)"]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -161,7 +191,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "778b6c91cc887beb89bcdd244c4e37569d034611c51112666657ee17039fffb3"
+content-hash = "30b0225a7349770bf8b04b968fb5b3b8d8dc5d8a18ce227a8edc8d6812da1547"
 
 [metadata.files]
 attrs = [
@@ -218,9 +248,29 @@ pluggy = [
     {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
 ]
+pycairo = [
+    {file = "pycairo-1.23.0-cp310-cp310-win32.whl", hash = "sha256:564601e5f528531c6caec1c0177c3d0709081e1a2a5cccc13561f715080ae535"},
+    {file = "pycairo-1.23.0-cp310-cp310-win_amd64.whl", hash = "sha256:e7cde633986435d87a86b6118b7b6109c384266fd719ef959883e2729f6eafae"},
+    {file = "pycairo-1.23.0-cp311-cp311-win32.whl", hash = "sha256:3a71f758e461180d241e62ef52e85499c843bd2660fd6d87cec99c9833792bfa"},
+    {file = "pycairo-1.23.0-cp311-cp311-win_amd64.whl", hash = "sha256:2dec5378133778961993fb59d66df16070e03f4d491b67eb695ca9ad7a696008"},
+    {file = "pycairo-1.23.0-cp37-cp37m-win32.whl", hash = "sha256:d6bacff15d688ed135b4567965a4b664d9fb8de7417a7865bb138ad612043c9f"},
+    {file = "pycairo-1.23.0-cp37-cp37m-win_amd64.whl", hash = "sha256:ec305fc7f2f0299df78aadec0eaf6eb9accb90eda242b5d3492544d3f2b28027"},
+    {file = "pycairo-1.23.0-cp38-cp38-win32.whl", hash = "sha256:1a6d8e0f353062ad92954784e33dbbaf66c880c9c30e947996c542ed9748aaaf"},
+    {file = "pycairo-1.23.0-cp38-cp38-win_amd64.whl", hash = "sha256:82e335774a17870bc038e0c2fb106c1e5e7ad0c764662023886dfcfce5bb5a52"},
+    {file = "pycairo-1.23.0-cp39-cp39-win32.whl", hash = "sha256:a4b1f525bbdf637c40f4d91378de36c01ec2b7f8ecc585b700a079b9ff83298e"},
+    {file = "pycairo-1.23.0-cp39-cp39-win_amd64.whl", hash = "sha256:87efd62a7b7afad9a0a420f05b6008742a6cfc59077697be65afe8dc73ae15ad"},
+    {file = "pycairo-1.23.0.tar.gz", hash = "sha256:9b61ac818723adc04367301317eb2e814a83522f07bbd1f409af0dada463c44c"},
+]
+pygobject = [
+    {file = "PyGObject-3.42.2.tar.gz", hash = "sha256:21524cef33100c8fd59dc135948b703d79d303e368ce71fa60521cc971cd8aa7"},
+]
 pytest = [
     {file = "pytest-7.2.0-py3-none-any.whl", hash = "sha256:892f933d339f068883b6fd5a459f03d85bfcb355e4981e146d2c7616c21fef71"},
     {file = "pytest-7.2.0.tar.gz", hash = "sha256:c4014eb40e10f11f355ad4e3c2fb2c6c6d1919c73f3b5a433de4708202cade59"},
+]
+req2flatpak = [
+    {file = "req2flatpak-0.1.0-py3-none-any.whl", hash = "sha256:d4333a3fcff9e7ffaa58f1b3b1e47cdc76bcbec90f17a09029efdfb822fd15b1"},
+    {file = "req2flatpak-0.1.0.tar.gz", hash = "sha256:ec12bc35f6286240289c4d9e751fa9647ded36692c653f2257b97d69c649bdbf"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
