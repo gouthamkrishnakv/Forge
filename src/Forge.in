@@ -29,6 +29,9 @@ if __name__ == "__main__":
     ui_resource = Gio.Resource.load(os.path.join(pkgdatadir, "Forge.UI.gresource"))
     ui_resource._register()
 
+    data_resource = Gio.Resource.load(os.path.join(pkgdatadir, "Forge.data.gresource"))
+    data_resource._register()
+
     from forge import main
 
     sys.exit(main.main(VERSION))

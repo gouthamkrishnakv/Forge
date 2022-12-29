@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+
+# Forge: Main
+#
+# Copyright (C) 2022 Goutham Krishna K V
+
+import logging
 import sys
 import gi
 
@@ -18,9 +25,20 @@ class ForgeApplication(Adw.Application):
 
     def add_default_actions(self):
         self.create_action("quit", self._quit, ["<primary>q"])
+        self.create_action("preferences", self._preferences, ["<primary>p"])
 
-    def _quit(self, *__args):
+    def _quit(self, **kwargs):
         self.quit()
+
+    def _preferences(self, **kwargs):
+        print("Preferences clicked")
+
+    def create_action(self, name: str, callback, shortcuts=None, parent="app"):
+        action = Gio.SimpleAction.new(name, None)
+        action.connect("activate", callback)
+        self.add_action(action)
+        if shortcuts:
+            self.set_accels_for_action(f"{parent}.{name}", shortcuts)
 
     def do_activate(self):
         win: Gtk.Window = self.props.active_window
@@ -28,15 +46,9 @@ class ForgeApplication(Adw.Application):
             win = MainWindow(application=self)
         win.present()
 
-    def create_action(self: str, name, callback, shortcuts=None):
-        action = Gio.SimpleAction.new(name, None)
-        action.connect("activate", callback)
-        self.add_action(action)
-        if shortcuts:
-            self.set_accels_for_action(f"app.{name}", shortcuts)
-
 
 def main(version):
     """Application entry point."""
+    logging.basicConfig(format="%(levelname)s: %(name)s\t:%(message)s",level=logging.DEBUG)
     app = ForgeApplication()
     return app.run(sys.argv)

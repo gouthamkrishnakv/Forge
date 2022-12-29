@@ -31,10 +31,13 @@ configure_file(
   install_dir: get_option('bindir')
 )
 
+
 sources = files(
   '__init__.py',
   'main.py',
-  'main_window.py'
+  'main_window.py',
 )
+
+subdir('mail')
 
 install_data(sources, install_dir: moduledir)
