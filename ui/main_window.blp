@@ -2,23 +2,393 @@ using Gtk 4.0;
 using Adw 1;
 
 template MainWindow : Adw.ApplicationWindow {
-  default-width: 600;
-  default-height: 300;
+  default-width: 1280;
+  default-height: 720;
 
-  Box {
-    orientation: vertical;
+  // Sidebar + Content
+  Adw.ToastOverlay toast_overlay {
+    Adw.Flap flap {
+      fold-policy: auto;
 
-    HeaderBar header_bar {
-      MenuButton {
-        icon-name: "open-menu-symbolic";
-        menu-model: primary_menu;
+      // Sidebar
+      [flap]
+      Box flap_box {
+        styles ["background"]
+        orientation: vertical;
+
+        // Sidebar Header
+        [start]
+        Adw.HeaderBar {
+          show-end-title-buttons: false;
+          show-start-title-buttons: true;
+
+          // Headerbar Left Icon: "pen and paper write" -> Compose a message
+          [start]
+          Button {
+            tooltip-text: "Compose New Message";
+            child: Adw.ButtonContent {
+              icon-name: "compose-symbolic";
+            };
+          }
+
+          // App Title
+          // TODO: Switch to using a drop-down for accounts.
+          [title]
+          Label titlebar {
+            styles ["title"]
+            // Change the app name as and where required
+            label: "Google Mail";
+          }
+
+          // Account Preferences
+          [end]
+          Button {
+            child: Adw.ButtonContent {
+              icon-name: "people-symbolic";
+            };
+            tooltip-text: "Accounts";
+          }
+        }
+
+        // Sidebar Elements
+        ScrolledWindow {
+          vexpand: true;
+
+          // Sidebar list
+          ListBox {
+            styles ["navigation-sidebar"]
+
+            // Inbox
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "inbox-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Inbox";
+                }
+              }
+            }
+
+            // Unread
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "mail-unread-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Unread";
+                }
+              }
+            }
+
+            // Unread
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "starred-mail-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Starred";
+                }
+              }
+            }
+
+            // Sent
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "sent-mail-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Sent";
+                }
+              }
+            }
+
+            // Junk
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "junk-mail-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Junk";
+                }
+              }
+            }
+
+            // Archive
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "mail-archive-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Archived";
+                }
+              }
+            }
+
+            // Deleted
+            ListBoxRow {
+              Box {
+                spacing: 16;
+
+                [start]
+                Image {
+                  valign: center;
+                  icon-name: "user-trash-symbolic";
+                }
+                [start]
+                Label {
+                  halign: start;
+                  label: "Deleted";
+                }
+              }
+            }
+          }
+        }
       }
-    }
 
-    Label label {
-      styles ["title-1"]
-      label: "Hello, World!";
-      vexpand: true;
+      // Separate between Sidebars
+      [separator]
+      Separator {}
+
+      // Content Box: Thread Pane + Reading Pane
+      [content]
+      Box content_box {
+        orientation: vertical;
+        width-request: 360;
+
+        // Application Headerbar
+        [start]
+        Adw.HeaderBar {
+          show-end-title-buttons: true;
+          show-start-title-buttons: false;
+
+          [title]
+          Label {
+            styles ["title"]
+            label: "Forge";
+          }
+
+          [start]
+          ToggleButton sidebar_toggle {
+            active: bind flap.reveal-flap bidirectional;
+
+            Adw.ButtonContent {
+              icon-name: "sidebar-show-symbolic";
+            }
+          }
+          [start]
+          SearchEntry {
+            width-request: 150;
+            placeholder-text: "Search john.doe@example.com";
+          }
+          [start]
+          Spinner client_load_spinner {
+            spinning: true;
+          }
+        }
+
+        // Thread Pane
+        [start]
+        Adw.Leaflet thread_pane {
+          Revealer {
+            transition-type: slide_right;
+            reveal-child: true;
+
+            ScrolledWindow {
+              vexpand: true;
+              width-request: 400;
+
+              ListBox thread_list {
+                styles ["navigation-sidebar"]
+                // Single Thread Row
+                ListBoxRow row1 {
+                  styles ["thread_row", "thread_row_unread"]
+                  // Main Box
+                  Box {
+                    orientation: vertical;
+                    height-request: 100;
+                    spacing: 10;
+
+                    // First Line Box
+                    Box {
+                      orientation: horizontal;
+                      valign: center;
+                      [start]
+                      Image { styles ["thread_row_unread_indicator"] icon-name: "dot-symbolic"; }
+                      [start]
+                      Label { styles ["thread_row_author"] label: "John Doe";}
+
+                      Separator { styles ["thread_row_sep"] hexpand: true; }
+
+                      [end]
+                      Label {
+                        styles ["thread_row_timestamp"]
+                        label: "August 20, 15:00";
+                      }
+                    }
+
+                    Label {
+                      styles ["thread_row_title"]
+                      halign: start;
+                      label: "Re: It was amazing last day!";
+                    }
+                    Label {
+                      ellipsize: end;
+                      label: "Hi! Please find the attached transmittal summary of this application";
+                      halign: start;
+                    }
+                  }
+                }
+
+                // Single Thread Row
+                ListBoxRow row2 {
+                  styles ["thread_row"]
+                  // Main Box
+                  Box {
+                    orientation: vertical;
+                    height-request: 100;
+                    spacing: 10;
+
+                    // First Line Box
+                    Box {
+                      orientation: horizontal;
+                      valign: center;
+                      [start]
+                      Image { styles ["thread_row_unread_indicator"] icon-name: "dot-symbolic"; }
+                      [start]
+                      Label { styles ["thread_row_author"] label: "John Doe";}
+
+                      Separator { styles ["thread_row_sep"] hexpand: true; }
+
+                      [end]
+                      Label {
+                        styles ["thread_row_timestamp"]
+                        label: "August 20, 15:00";
+                      }
+                    }
+
+                    Label {
+                      styles ["thread_row_title"]
+                      halign: start;
+                      label: "Re: It was amazing last day!";
+                    }
+                    Label {
+                      ellipsize: end;
+                      label: "Hi! Please find the attached transmittal summary of this application";
+                      halign: start;
+                    }
+                  }
+                }
+
+                // Single Thread Row
+                ListBoxRow row3 {
+                  styles ["thread_row"]
+                  // Main Box
+                  Box {
+                    orientation: vertical;
+                    height-request: 100;
+                    spacing: 10;
+
+                    // First Line Box
+                    Box {
+                      orientation: horizontal;
+                      valign: center;
+                      [start]
+                      Image { styles ["thread_row_unread_indicator"] icon-name: "dot-symbolic"; }
+                      [start]
+                      Label { styles ["thread_row_author"] label: "John Doe";}
+
+                      Separator { styles ["thread_row_sep"] hexpand: true; }
+
+                      [end]
+                      Label {
+                        styles ["thread_row_timestamp"]
+                        label: "August 20, 15:00";
+                      }
+                    }
+
+                    Label {
+                      styles ["thread_row_title"]
+                      halign: start;
+                      label: "Re: It was amazing last day!";
+                    }
+                    Label {
+                      ellipsize: end;
+                      label: "Hi! Please find the attached transmittal summary of this application";
+                      halign: start;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          // Pane Separation
+          [start]
+          Separator {}
+
+          // Reading Pane
+          [start]
+          Adw.Leaflet reading_pane {
+            Revealer {
+              transition-type: slide_right;
+              reveal-child: true;
+              width-request: 256;
+
+              ScrolledWindow {
+                vexpand: true;
+                hexpand: true;
+
+                Adw.StatusPage {
+                  icon-name: "com.crosine.Forge";
+                  title: "Forge";
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -29,12 +399,14 @@ menu primary_menu {
       label: _("Preferences");
       action: "app.preferences";
     }
+
+    // item {
+    //   label: _("Keyboard Shortcuts");
+    //   action: "win.show-help-overlay";
+    // }
+
     item {
-      label: _("Keyboard Shortcuts");
-      action: "win.show-help-overlay";
-    }
-    item {
-      label: _("About Tempest");
+      label: _("About Augmentia");
       action: "app.about";
     }
   }
