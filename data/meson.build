@@ -37,3 +37,11 @@ if compile_schemas.found()
 endif
 
 subdir('icons')
+
+
+gnome.compile_resources('Forge.data',
+  'Forge.data.gresource.xml',
+  gresource_bundle: true,
+  install: true,
+  install_dir: join_paths(get_option('prefix'), get_option('datadir'), meson.project_name()),
+)

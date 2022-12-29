@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/crosine/Forge/icons/scalable/actions">
+    <!-- Original Icon: pen-and-paper-symbolic -->
+    <file preprocess="xml-stripblanks" alias="compose-symbolic.svg">icons/compose-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="people-symbolic.svg">icons/people-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="inbox-symbolic.svg">icons/inbox-symbolic.svg</file>
+    <!-- Original Icon: star-filled-rounded-symbolic -->
+    <file preprocess="xml-stripblanks" alias="starred-mail-symbolic.svg">icons/starred-mail-symbolic.svg</file>
+    <!-- Original Icon: paper-plane-symbolic -->
+    <file preprocess="xml-stripblanks" alias="sent-mail-symbolic.svg">icons/sent-mail-symbolic.svg</file>
+    <!-- Original Icon: thumbs-down-symbolic -->
+    <file preprocess="xml-stripblanks" alias="junk-mail-symbolic.svg">icons/junk-mail-symbolic.svg</file>
+    <!-- Original Icon: mail-archive-symbolic -->
+    <file preprocess="xml-stripblanks" alias="mail-archive-symbolic.svg">icons/mail-archive-symbolic.svg</file>
+  </gresource>
+</gresources>
