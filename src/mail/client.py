@@ -1,8 +1,7 @@
 import threading
 # import imapclient
 import logging
-import asyncio
-from typing import List
+from typing import Callable, List
 
 from .imap.session import Session
 
@@ -14,14 +13,15 @@ class MailClient(threading.Thread):
     # Logging
     _logger = logging.getLogger("client.MailClient")
     # Event
-    loop: asyncio.AbstractEventLoop
+    stop_ev: threading.Event
+    load_complete: Callable
     sessions: List[Session]
 
-    def __init__(self, load_complete):
+    def __init__(self, load_complete: Callable):
         threading.Thread.__init__(self)
+        self.stop_ev: threading.Event
         self.load_complete = load_complete
-        self.loop = asyncio.get_event_loop()
-        self.sessions: List[Session] = []
+        self.sessions = []
 
     async def __setup(self):
         self._logger.info("SETTING UP (FAKE)")
@@ -34,16 +34,14 @@ class MailClient(threading.Thread):
         self._logger.info("LOADING COMPLETE")
 
     def run(self):
-        self.loop.create_task(self.__setup())
-        self.loop.run_forever()
+        """This methods starts/runs the thread."""
+        self.__setup()
 
-    async def logout_all_sessions(self):
-        async for session in self.sessions:
-            session.connection.logout()
-
+    def close_connections(self):
+        for session_to_close in self.sessions:
+            session_to_close.logout()
 
     def stop(self):
         # When stop method is run, stop the asyncio loop
-        self.loop.call_soon_threadsafe(self.logout_all_sessions)
-        self.loop.call_soon_threadsafe(self.loop.stop)
+        self.stop_ev.set()
         self._logger.info("STOPPED")

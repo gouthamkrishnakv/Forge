@@ -23,6 +23,7 @@
   ],
 
   "modules": [
+    "python-dependencies.json",
     {
       "name": "Tempest",
       "builddir": true,

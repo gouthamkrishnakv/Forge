@@ -1,4 +1,3 @@
-import queue
 from logging import error
 import logging
 import gi
@@ -40,7 +39,7 @@ class MainWindow(Adw.ApplicationWindow):
         """
         This method is run when an application is closed.
         """
-        self.clthread.stop_ev.set()
+        self.clthread.stop()
 
     # Setup methods
 
