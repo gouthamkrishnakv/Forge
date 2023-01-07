@@ -1,36 +1,49 @@
 import threading
-import imaplib
+# import imapclient
 import logging
+import asyncio
+from typing import List
+
+from .imap.session import Session
 
 USERNAME = "imaptest.fluent@outlook.com"
 PASSWORD = "ClarifyMyTest200"
-
+HOST = "outlook.office365.com"
 
 class MailClient(threading.Thread):
     # Logging
     _logger = logging.getLogger("client.MailClient")
     # Event
-    stop_ev: threading.Event
+    loop: asyncio.AbstractEventLoop
+    sessions: List[Session]
 
     def __init__(self, load_complete):
         threading.Thread.__init__(self)
-        self.stop_ev = threading.Event()
         self.load_complete = load_complete
+        self.loop = asyncio.get_event_loop()
+        self.sessions: List[Session] = []
+
+    async def __setup(self):
+        self._logger.info("SETTING UP (FAKE)")
+        # await asyncio.sleep(5)
+        new_client = Session(USERNAME, PASSWORD, HOST)
+        new_client.connect()
+        new_client.login()
+        self.sessions.append(new_client)
+        self.load_complete()
+        self._logger.info("LOADING COMPLETE")
 
     def run(self):
-        self._logger.info("Thread started")
-        clnt = imaplib.IMAP4_SSL("outlook.office365.com")
-        self._logger.info(clnt.login(USERNAME, PASSWORD))
-        self._logger.info("LOGGED IN")
-        self._logger.info(clnt.noop())
-        self._logger.info(clnt.select(mailbox="INBOX", readonly=True))
-        # self._logger.info(clnt.list(directory="INBOX/", pattern="*"))
-        self._logger.info(clnt.status("INBOX", "MESSAGES"))
-        # self._logger.info(clnt.search(None, "ALL", "HEADER", "SUBJECT", '"Microsoft"'))
-        self._logger.info(clnt.fetch("Inbox (MESSAGES 1)", "HEADER SUBJECT BODY"))
-        self.load_complete()
-        while not self.stop_ev.wait(timeout=0.05):
-            pass
-        self._logger.info(clnt.logout())
-        self._logger.info("LOGGED OUT")
-        self._logger.info("Thread stopped")
+        self.loop.create_task(self.__setup())
+        self.loop.run_forever()
+
+    async def logout_all_sessions(self):
+        async for session in self.sessions:
+            session.connection.logout()
+
+
+    def stop(self):
+        # When stop method is run, stop the asyncio loop
+        self.loop.call_soon_threadsafe(self.logout_all_sessions)
+        self.loop.call_soon_threadsafe(self.loop.stop)
+        self._logger.info("STOPPED")
