@@ -19,11 +19,11 @@ class MailClient(threading.Thread):
 
     def __init__(self, load_complete: Callable):
         threading.Thread.__init__(self)
-        self.stop_ev: threading.Event
+        self.stop_ev = threading.Event()
         self.load_complete = load_complete
         self.sessions = []
 
-    async def __setup(self):
+    def __setup(self):
         self._logger.info("SETTING UP (FAKE)")
         # await asyncio.sleep(5)
         new_client = Session(USERNAME, PASSWORD, HOST)
@@ -36,6 +36,7 @@ class MailClient(threading.Thread):
     def run(self):
         """This methods starts/runs the thread."""
         self.__setup()
+        self.stop_ev.wait()
 
     def close_connections(self):
         for session_to_close in self.sessions:
@@ -43,5 +44,6 @@ class MailClient(threading.Thread):
 
     def stop(self):
         # When stop method is run, stop the asyncio loop
+        self.close_connections()
         self.stop_ev.set()
         self._logger.info("STOPPED")

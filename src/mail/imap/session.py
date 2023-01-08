@@ -46,3 +46,7 @@ class Session:
         self.connection.login(self.username, self.password)
         self.__logger.info("Logged in with ({}, {})".format(self.username, "****"))
         return self
+
+    def logout(self):
+        self.connection.logout()
+        return self
