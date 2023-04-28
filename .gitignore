@@ -170,6 +170,7 @@ release/
 
 # Flatpak Gitignores
 .flatpak/
+.flatpak-builder/
 
 # VSCode Gitignores
 .vscode/

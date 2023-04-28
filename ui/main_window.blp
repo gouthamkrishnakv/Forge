@@ -211,7 +211,7 @@ template MainWindow : Adw.ApplicationWindow {
 
           [start]
           ToggleButton sidebar_toggle {
-            active: bind flap.reveal-flap bidirectional;
+            active: bind-property flap.reveal-flap bidirectional;
 
             Adw.ButtonContent {
               icon-name: "sidebar-show-symbolic";

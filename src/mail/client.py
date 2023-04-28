@@ -1,7 +1,7 @@
 import threading
-# import imapclient
 import logging
-from typing import Callable, List
+from collections.abc import Callable
+from typing import List
 
 from .imap.session import Session
 
@@ -14,10 +14,10 @@ class MailClient(threading.Thread):
     _logger = logging.getLogger("client.MailClient")
     # Event
     stop_ev: threading.Event
-    load_complete: Callable
+    load_complete: Callable[[], None]
     sessions: List[Session]
 
-    def __init__(self, load_complete: Callable):
+    def __init__(self, load_complete: Callable[[], None]):
         threading.Thread.__init__(self)
         self.stop_ev = threading.Event()
         self.load_complete = load_complete
@@ -29,9 +29,19 @@ class MailClient(threading.Thread):
         new_client = Session(USERNAME, PASSWORD, HOST)
         new_client.connect()
         new_client.login()
+        new_client.check()
+        new_client.search()
+        new_client.fetch()
         self.sessions.append(new_client)
+        session_index = len(self.sessions)
         self.load_complete()
         self._logger.info("LOADING COMPLETE")
+        return session_index
+
+    def setup(self):
+        session_index = self.__setup()
+        return session_index
+
 
     def run(self):
         """This methods starts/runs the thread."""
